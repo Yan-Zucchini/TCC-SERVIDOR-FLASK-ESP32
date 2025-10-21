@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Administração TCC</title>
+    <style>
+        body { font-family: sans-serif; background-color: #333; color: white; margin: 20px; }
+        div { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"] { padding: 8px; font-size: 16px; border-radius: 5px; border: none; }
+        button { padding: 10px 15px; font-size: 16px; color: white; background-color: #007542; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Painel de Registo de Rostos</h1>
+    
+    <form action="/iniciar_registo" method="POST">
+        <div>
+            <label for="nome">Nome da Pessoa:</label>
+            <input type="text" id="nome" name="nome" placeholder="Ex: Yanzuc">
+        </div>
+        <button type="submit">1. Preparar Registo</button>
+    </form>
+
+    <h2>Instruções:</h2>
+    <p>1. Digite o nome da pessoa e clique em "Preparar Registo".</p>
+    <p>2. Depois, vá à página de stream da sua câmera (no IP 10.107.7.78).</p>
+    <p>3. Clique no botão "Enroll Face" na interface da câmera para capturar o rosto.</p>
+    <p>4. O rosto será salvo no servidor com o nome que você digitou aqui.</p>
+
+</body>
+</html>
