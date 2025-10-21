@@ -3,7 +3,7 @@ from flask import Flask, request, render_template, redirect, url_for
 import numpy as np
 
 # --- CONFIGURAÇÃO ---
-PASTA_DOS_ROSTOS = "faces_registadas"
+PASTA_DOS_ROSTOS = "faces_registradas"
 LIMITE_DE_RECONHECIMENTO = 2500 
 
 app = Flask(__name__)
