@@ -6,28 +6,126 @@
     <title>Painel de Administração TCC</title>
     <style>
         body { font-family: sans-serif; background-color: #333; color: white; margin: 20px; }
+        .container-principal { display: flex; flex-wrap: wrap; gap: 20px; }
+        .bloco-camera { flex: 3; min-width: 350px; background-color: #444; padding: 15px; border-radius: 8px; box-sizing: border-box; }
+        .bloco-controlo { flex: 7; min-width: 400px; background-color: #444; padding: 15px; border-radius: 8px; box-sizing: border-box; }
         div { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"] { padding: 8px; font-size: 16px; border-radius: 5px; border: none; }
+        input[type="text"] { padding: 8px; font-size: 16px; border-radius: 5px; border: none; width: 95%; }
         button { padding: 10px 15px; font-size: 16px; color: white; background-color: #007542; border: none; border-radius: 5px; cursor: pointer; }
+        iframe { border: 2px solid #555; border-radius: 5px; width: 100%; height: 600px; }
+
+        /* --- ESTILOS ATUALIZADOS PARA O CRUD --- */
+        #lista-de-rostos ul { list-style-type: none; padding: 0; }
+        #lista-de-rostos li {
+            background-color: #555;
+            padding: 10px;
+            margin-bottom: 10px; /* Aumentei o espaço */
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            flex-wrap: wrap; /* Permite quebrar a linha se não couber */
+        }
+        
+        /* Div para agrupar os botões de ação */
+        .acoes {
+            display: flex;
+            gap: 10px; /* Espaço entre os formulários */
+            align-items: center;
+        }
+
+        /* Formulários dentro da lista */
+        .form-renomear, .form-apagar {
+            display: flex;
+            gap: 5px; /* Espaço entre o input e o botão */
+            margin: 0;
+        }
+        
+        .form-renomear input[type="text"] {
+            width: 150px; /* Tamanho do campo "novo nome" */
+            font-size: 14px;
+            padding: 5px;
+        }
+        
+        .btn-apagar, .btn-renomear {
+            font-size: 14px;
+            padding: 5px 10px;
+        }
+        
+        .btn-apagar { background-color: #b71c1c; } /* Vermelho */
+        .btn-renomear { background-color: #0277bd; } /* Azul */
+        
+        .notificacao { padding: 15px; margin-bottom: 20px; border-radius: 5px; font-weight: bold; }
+        .notificacao.info { background-color: #0277bd; color: white; }
+        .notificacao.error { background-color: #c62828; color: white; }
+        .notificacao.success { background-color: #007542; color: white; }
+        /* --- FIM DOS NOVOS ESTILOS --- */
     </style>
 </head>
 <body>
-    <h1>Painel de Registo de Rostos</h1>
+    <h1>Painel de Administração de Rostos</h1>
     
-    <form action="/iniciar_registo" method="POST">
-        <div>
-            <label for="nome">Nome da Pessoa:</label>
-            <input type="text" id="nome" name="nome" placeholder="Ex: Yanzuc">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="notificacao {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="container-principal">
+        
+        <div class="bloco-camera">
+            <h2>Câmera (O "Olho")</h2>
+            <p>Use os controlos abaixo para registar e reconhecer rostos.</p>
+            
+            <iframe src="http://10.23.119.78"></iframe> 
         </div>
-        <button type="submit">1. Preparar Registo</button>
-    </form>
 
-    <h2>Instruções:</h2>
-    <p>1. Digite o nome da pessoa e clique em "Preparar Registo".</p>
-    <p>2. Depois, vá à página de stream da sua câmera (no IP 10.107.7.78).</p>
-    <p>3. Clique no botão "Enroll Face" na interface da câmera para capturar o rosto.</p>
-    <p>4. O rosto será salvo no servidor com o nome que você digitou aqui.</p>
+        <div class="bloco-controlo">
+            <h2>Registar Novo Utilizador</h2>
+            <form action="/iniciar_registo" method="POST">
+                <div>
+                    <label for="nome">Nome da Pessoa:</label>
+                    <input type="text" id="nome" name="nome" placeholder="Ex: Yanzuc">
+                </div>
+                <button type="submit">1. Preparar Registo</button>
+            </form>
 
-</body>
+            <h2>Instruções:</h2>
+            <p>1. Digite o nome da pessoa acima e clique em "Preparar Registo".</p>
+            <p>2. Na janela da câmera ao lado, clique no botão "Enroll Face".</p>
+            <p>3. O rosto será salvo no servidor com o nome que você digitou.</p>
+            
+            <h2>Rostos Registados:</h2>
+            <div id="lista-de-rostos">
+                {% if lista_rostos %}
+                    <ul>
+                        {% for nome in lista_rostos %}
+                            <li>
+                                <span>{{ nome }}</span> 
+                                
+                                <div class="acoes">
+                                    
+                                    <form action="{{ url_for('renomear_rosto', nome_antigo=nome) }}" method="POST" class="form-renomear">
+                                        <input type="text" name="novo_nome" placeholder="Novo nome...">
+                                        <button type="submit" class="btn-renomear">Renomear</button>
+                                    </form>
+                                    
+                                    <form action="{{ url_for('apagar_rosto', nome=nome) }}" method="POST" class="form-apagar">
+                                        <button type="submit" class="btn-apagar">Apagar</button>
+                                    </form>
+                                    
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>Nenhum rosto registado até ao momento.</p>
+                {% endif %}
+            </div>
+            </div>
+
+    </div> </body>
 </html>
