@@ -1,90 +1,218 @@
+<!-- Define que este documento é HTML5 -->
 <!DOCTYPE html>
+<!-- Inicia o documento HTML e define o idioma como Português do Brasil -->
 <html lang="pt-br">
+
 <head>
+    <!-- Define a codificação de caracteres como UTF-8 (para aceitar acentos e cedilhas) -->
     <meta charset="UTF-8">
+    <!-- Configura a viewport para que a página seja responsiva em dispositivos móveis -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Define o título que aparece na aba do navegador -->
     <title>Painel de Administração TCC</title>
     <style>
-        body { font-family: sans-serif; background-color: #333; color: white; margin: 20px; }
-        .container-principal { display: flex; flex-wrap: wrap; gap: 20px; }
-        .bloco-camera { flex: 3; min-width: 350px; background-color: #444; padding: 15px; border-radius: 8px; box-sizing: border-box; }
-        .bloco-controlo { flex: 7; min-width: 400px; background-color: #444; padding: 15px; border-radius: 8px; box-sizing: border-box; }
-        div { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"] { padding: 8px; font-size: 16px; border-radius: 5px; border: none; width: 95%; }
-        button { padding: 10px 15px; font-size: 16px; color: white; background-color: #007542; border: none; border-radius: 5px; cursor: pointer; }
-        iframe { border: 2px solid #555; border-radius: 5px; width: 100%; height: 600px; }
+        /* Estilos gerais do corpo da página: fonte, cor de fundo escura, texto branco */
+        body {
+            font-family: sans-serif;
+            background-color: #333;
+            color: white;
+            margin: 20px;
+        }
+
+        /* Container principal que usa Flexbox para organizar os blocos lado a lado */
+        .container-principal {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Bloco da esquerda (Câmera): ocupa menos espaço (flex: 3) */
+        .bloco-camera {
+            flex: 3;
+            min-width: 350px;
+            background-color: #444;
+            padding: 15px;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        /* Bloco da direita (Controlos): ocupa mais espaço (flex: 7) */
+        .bloco-controlo {
+            flex: 7;
+            min-width: 400px;
+            background-color: #444;
+            padding: 15px;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        /* Espaçamento padrão para divs */
+        div {
+            margin-bottom: 15px;
+        }
+
+        /* Estilo para os rótulos dos campos */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* Estilo para campos de texto */
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            width: 95%;
+        }
+
+        /* Estilo base para botões (verde) */
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: #007542;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Estilo para o iframe que mostra a câmera */
+        iframe {
+            border: 2px solid #555;
+            border-radius: 5px;
+            width: 100%;
+            height: 600px;
+        }
 
         /* --- ESTILOS ATUALIZADOS PARA O CRUD --- */
-        #lista-de-rostos ul { list-style-type: none; padding: 0; }
+        /* Remove os pontos da lista de rostos */
+        #lista-de-rostos ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        /* Estilo de cada item da lista (cada rosto) */
         #lista-de-rostos li {
             background-color: #555;
+            /* Fundo ligeiramente mais claro que o bloco */
             padding: 10px;
-            margin-bottom: 10px; /* Aumentei o espaço */
+            margin-bottom: 10px;
+            /* Aumentei o espaço */
             border-radius: 5px;
             display: flex;
-            justify-content: space-between; 
+            /* Flexbox para alinhar nome e botões */
+            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap; /* Permite quebrar a linha se não couber */
+            flex-wrap: wrap;
+            /* Permite quebrar a linha se não couber */
         }
-        
-        /* Div para agrupar os botões de ação */
+
+        /* Div para agrupar os botões de ação (Renomear e Apagar) */
         .acoes {
             display: flex;
-            gap: 10px; /* Espaço entre os formulários */
+            gap: 10px;
+            /* Espaço entre os formulários */
             align-items: center;
         }
 
-        /* Formulários dentro da lista */
-        .form-renomear, .form-apagar {
+        /* Formulários dentro da lista (para alinhar input e botão na mesma linha) */
+        .form-renomear,
+        .form-apagar {
             display: flex;
-            gap: 5px; /* Espaço entre o input e o botão */
+            gap: 5px;
+            /* Espaço entre o input e o botão */
             margin: 0;
         }
-        
+
+        /* Campo de texto específico para renomear */
         .form-renomear input[type="text"] {
-            width: 150px; /* Tamanho do campo "novo nome" */
+            width: 150px;
+            /* Tamanho do campo "novo nome" */
             font-size: 14px;
             padding: 5px;
         }
-        
-        .btn-apagar, .btn-renomear {
+
+        /* Botões menores para as ações da lista */
+        .btn-apagar,
+        .btn-renomear {
             font-size: 14px;
             padding: 5px 10px;
         }
-        
-        .btn-apagar { background-color: #b71c1c; } /* Vermelho */
-        .btn-renomear { background-color: #0277bd; } /* Azul */
-        
-        .notificacao { padding: 15px; margin-bottom: 20px; border-radius: 5px; font-weight: bold; }
-        .notificacao.info { background-color: #0277bd; color: white; }
-        .notificacao.error { background-color: #c62828; color: white; }
-        .notificacao.success { background-color: #007542; color: white; }
+
+        /* Cores específicas para os botões de ação */
+        .btn-apagar {
+            background-color: #b71c1c;
+        }
+
+        /* Vermelho para apagar */
+        .btn-renomear {
+            background-color: #0277bd;
+        }
+
+        /* Azul para renomear */
+
+        /* Estilos para as mensagens de notificação (Flash Messages) */
+        .notificacao {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .notificacao.info {
+            background-color: #0277bd;
+            color: white;
+        }
+
+        /* Azul para info */
+        .notificacao.error {
+            background-color: #c62828;
+            color: white;
+        }
+
+        /* Vermelho para erro */
+        .notificacao.success {
+            background-color: #007542;
+            color: white;
+        }
+
+        /* Verde para sucesso */
         /* --- FIM DOS NOVOS ESTILOS --- */
     </style>
 </head>
+
 <body>
     <h1>Painel de Administração de Rostos</h1>
-    
+
+    <!-- Bloco Jinja2 para exibir mensagens "flash" (notificações do servidor) -->
     {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="notificacao {{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <!-- Cria uma div com a classe da categoria (info, error, success) e mostra a mensagem -->
+    <div class="notificacao {{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
     {% endwith %}
 
     <div class="container-principal">
-        
+
+        <!-- Bloco da Esquerda: Visualização da Câmera -->
         <div class="bloco-camera">
-            <h2>Câmera (O "Olho")</h2>
-            <p>Use os controlos abaixo para registar e reconhecer rostos.</p>
-            
-            <iframe src="http://10.23.119.78"></iframe> 
+            <h2>Câmera</h2>
+            <p style="text-align: justify;">Role os menus da câmera para baixo e clique no botão start stream, ative as
+                funções face detection, face recognition e role novamente para baixo para visualizar a câmera.</p>
+
+            <!-- Iframe que carrega a interface web da ESP32 (IP fixo) -->
+            <iframe src="http://10.214.22.78"></iframe>
         </div>
 
+        <!-- Bloco da Direita: Controlos de Registo e Lista de Rostos -->
         <div class="bloco-controlo">
             <h2>Registar Novo Utilizador</h2>
+            <!-- Formulário para iniciar o registo de um novo rosto -->
+            <!-- Envia um POST para a rota /iniciar_registo -->
             <form action="/iniciar_registo" method="POST">
                 <div>
                     <label for="nome">Nome da Pessoa:</label>
@@ -97,35 +225,79 @@
             <p>1. Digite o nome da pessoa acima e clique em "Preparar Registo".</p>
             <p>2. Na janela da câmera ao lado, clique no botão "Enroll Face".</p>
             <p>3. O rosto será salvo no servidor com o nome que você digitou.</p>
-            
+
             <h2>Rostos Registados:</h2>
             <div id="lista-de-rostos">
+                <!-- Verifica se a lista de rostos (passada pelo Python) não está vazia -->
                 {% if lista_rostos %}
-                    <ul>
-                        {% for nome in lista_rostos %}
-                            <li>
-                                <span>{{ nome }}</span> 
-                                
-                                <div class="acoes">
-                                    
-                                    <form action="{{ url_for('renomear_rosto', nome_antigo=nome) }}" method="POST" class="form-renomear">
-                                        <input type="text" name="novo_nome" placeholder="Novo nome...">
-                                        <button type="submit" class="btn-renomear">Renomear</button>
-                                    </form>
-                                    
-                                    <form action="{{ url_for('apagar_rosto', nome=nome) }}" method="POST" class="form-apagar">
-                                        <button type="submit" class="btn-apagar">Apagar</button>
-                                    </form>
-                                    
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                <ul>
+                    <!-- Loop Jinja2: Para cada 'nome' na 'lista_rostos' -->
+                    {% for nome in lista_rostos %}
+                    <li>
+                        <!-- Mostra o nome do rosto -->
+                        <span>{{ nome }}</span>
+
+                        <div class="acoes">
+
+                            <!-- Formulário para RENOMEAR -->
+                            <!-- Usa url_for para gerar o link correto para a rota 'renomear_rosto' -->
+                            <form action="{{ url_for('renomear_rosto', nome_antigo=nome) }}" method="POST"
+                                class="form-renomear">
+                                <input type="text" name="novo_nome" placeholder="Novo nome...">
+                                <button type="submit" class="btn-renomear">Renomear</button>
+                            </form>
+
+                            <!-- Formulário para APAGAR -->
+                            <!-- Usa url_for para gerar o link para 'apagar_rosto' -->
+                            <!-- O atributo 'data-nome' guarda o nome para o JavaScript usar no pop-up -->
+                            <form action="{{ url_for('apagar_rosto', nome=nome) }}" method="POST" class="form-apagar"
+                                data-nome="{{ nome }}">
+                                <button type="submit" class="btn-apagar">Apagar</button>
+                            </form>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
                 {% else %}
-                    <p>Nenhum rosto registado até ao momento.</p>
+                <!-- Se a lista estiver vazia, mostra esta mensagem -->
+                <p>Nenhum rosto registado até ao momento.</p>
                 {% endif %}
             </div>
-            </div>
+        </div>
 
-    </div> </body>
+    </div>
+
+    <!-- JavaScript para interatividade no lado do cliente -->
+    <script>
+        // Espera que todo o conteúdo da página seja carregado antes de executar o script
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // 1. Encontra TODOS os formulários que têm a classe "form-apagar"
+            const formsApagar = document.querySelectorAll('.form-apagar');
+
+            // 2. Adiciona um "escutador" de eventos a cada um deles
+            formsApagar.forEach(form => {
+
+                // O "escutador" espera pelo evento 'submit' (quando o botão "Apagar" é clicado)
+                form.addEventListener('submit', function (event) {
+
+                    // 3. Obtém o nome do rosto que guardámos no atributo "data-nome" do formulário HTML
+                    const nome = form.dataset.nome;
+
+                    // 4. Mostra o pop-up de confirmação padrão do navegador
+                    // Retorna true se o utilizador clicar em "OK", false se clicar em "Cancelar"
+                    const confirmado = confirm(`Tem a certeza que quer apagar o rosto de "${nome}"? Esta ação não pode ser desfeita.`);
+
+                    // 5. Se o utilizador clicou em "Cancelar" (confirmado == false)...
+                    if (!confirmado) {
+                        event.preventDefault(); // ...impede o envio do formulário (cancela a ação).
+                    }
+                    // Se o utilizador clicou em "OK", o script não faz nada,
+                    // e o formulário é enviado normalmente para o servidor para apagar o rosto.
+                });
+            });
+        });
+    </script>
+</body>
+
 </html>
